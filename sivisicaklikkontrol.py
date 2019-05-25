@@ -1,32 +1,40 @@
-import os
-import glob
-import time
- 
-os.system('modprobe w1-gpio')
-os.system('modprobe w1-therm')
- 
-base_dir = '/sys/bus/w1/devices/'
-device_folder = glob.glob(base_dir + '28*')[0]
-device_file = device_folder + '/w1_slave'
- 
-def read_temp_raw():
-    f = open(device_file, 'r')
-    lines = f.readlines()
-    f.close()
-    return lines
- 
-def read_temp():
-    lines = read_temp_raw()
-    while lines[0].strip()[-3:] != 'YES':
-        time.sleep(0.2)
-        lines = read_temp_raw()
-    equals_pos = lines[1].find('t=')
-    if equals_pos != -1:
-        temp_string = lines[1][equals_pos+2:]
-        temp_c = float(temp_string) / 1000.0
-        temp_f = temp_c * 9.0 / 5.0 + 32.0
-        return temp_c, temp_f
-	
-while True:
-	print(read_temp())	
-	time.sleep(1)
+import smtplib
+
+tfile = open("/sys/bus/w1/devices/28-0309977939a0/w1_slave") 
+text = tfile.read() 
+tfile.close() 
+secondline = text.split("\n")[1] 
+sicaklikdata = secondline.split(" ")[9] 
+sicaklik = float(sicaklikdata[2:]) 
+sicaklik = sicaklik / 1000
+print ('sivinin sicakligi=',sicaklik,'C')
+
+if (sicaklik >= 25 and sicaklik <= 100):    
+    try:                
+                                                           # Hesap bilgilerimiz
+        kullanici="sivisicaklik@gmail.com"
+        kullanici_sifresi = 'sivisicaklik123'
+        alici = 'erdemtonga@yandex.com'              # alıcının mail adresi
+        konu = 'sivi sicakligi'
+        msj = 'sivi sicakligi cok yuksek'
+                                                         # bilgileri bir metinde derledik
+        email_text = """
+        From: {}
+        To: {}
+        Subject: {}
+        {}
+        """ .format(kullanici,alici, konu, msj)
+            
+        server = smtplib.SMTP('smtp.gmail.com:587')   #servere bağlanmak için gerekli host ve portu belirttik
+        server.starttls() #serveri TLS(bütün bağlantı şifreli olucak bilgiler korunucak) bağlantısı ile başlattık
+        server.login(kullanici, kullanici_sifresi)   # Gmail SMTP server'ına giriş yaptık
+        server.sendmail(kullanici, alici, email_text) # Mail'imizi gönderdik             server.close()     # SMTP serverimizi kapattık
+        print ('email gönderildi')
+            
+           
+    except:
+        print("bir hata oluştu")
+elif (sicaklik >=1 and sicaklik <=10):
+    print('sivinin sicakligi dusuk ve sicaklik=',sicaklik,'C')
+elif (sicaklik >=10 and sicaklik<=25):
+    print('sivi sicakligi normal=',sicaklik,'C')
