@@ -1,12 +1,12 @@
 import smtplib
 
-tfile = open("/sys/bus/w1/devices/28-0309977939a0/w1_slave") 
-text = tfile.read() 
-tfile.close() 
-secondline = text.split("\n")[1] 
-sicaklikdata = secondline.split(" ")[9] 
-sicaklik = float(sicaklikdata[2:]) 
-sicaklik = sicaklik / 1000
+tfile = open("/sys/bus/w1/devices/28-0309977939a0/w1_slave") # Sensörün veri aldığı dosyayı açtık.28- ile başlayan numaraya kendi numaranızı girin.
+text = tfile.read() # Dosyanın içindeki tüm metni oku.
+tfile.close()       # Metnin okunduğu dosyayı kapat.
+secondline = text.split("\n")[1] # Metni satırlara böl ve 2. satırı seç.
+sicaklikdata = secondline.split(" ")[9] # Satırı boşluklara bakarak kelimelere ayır ve 10. kelimeyi seç (0'dan saymaya başlar).
+sicaklik = float(sicaklikdata[2:]) # İlk iki karakter "t =" dir, bu yüzden onlardan kurtul ve sıcaklığı bir dizgiden bir sayıya çevir.
+sicaklik = sicaklik / 1000 # Alınan verideki sıcaklığı tam gösterebilmek için 1000e bölünür.
 print ('sivinin sicakligi=',sicaklik,'C')
 
 if (sicaklik >= 25 and sicaklik <= 100):    
