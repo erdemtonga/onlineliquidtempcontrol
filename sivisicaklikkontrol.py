@@ -12,9 +12,9 @@ print ('sivinin sicakligi=',sicaklik,'C')
 if (sicaklik >= 25 and sicaklik <= 100):    
     try:                
                                                            # Hesap bilgilerimiz
-        kullanici="sivisicaklik@gmail.com"
-        kullanici_sifresi = 'sivisicaklik123'
-        alici = 'erdemtonga@yandex.com'              # alıcının mail adresi
+        kullanici="gonder mail"
+        kullanici_sifresi = 'sifre'
+        alici = 'alici mail'              # alıcının mail adresi
         konu = 'sivi sicakligi'
         msj = 'sivi sicakligi cok yuksek'
                                                          # bilgileri bir metinde derledik
